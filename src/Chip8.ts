@@ -1,7 +1,7 @@
 export default class Chip8 {
   public opcode: number;
   // 4K memory
-  public memory!: Int8Array;
+  public memory: Int8Array;
   // registers V0...VE
   public V: Int8Array;
   // index register
@@ -51,8 +51,23 @@ export default class Chip8 {
   /**
    * Copies program into memory
    */
-  public loadGame() {
+  public loadGame(file: Blob) {
+    // load pong
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      const arrBuff = new Int8Array(fileReader.result as ArrayBuffer);
+      for (let i = 0; i < arrBuff.length; i++) {
+        this.memory[i + 512] = arrBuff[i];
+      }
+    }
+    fileReader.readAsArrayBuffer(file);
+  }
 
+  public dissassemble() {
+    for (let i = 0; i < this.memory.length; i++) {
+      let opcode = this.memory[i] << 8 | this.memory[i + 1];
+      this.execute(opcode);
+    }
   }
 
   public emulateCycle() {
@@ -62,6 +77,7 @@ export default class Chip8 {
     // Decode and execute Opcode
     this.execute(this.opcode);
     // Update timers
+    this.pc += 2;
   }
 
   public setKeys() {
