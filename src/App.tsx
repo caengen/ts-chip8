@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Chip8 from './Chip8';
+const pong = require("./roms/Pong.ch8");
 
 class App extends Component {
   render() {
+    const chip8 = new Chip8();
+    chip8.loadGame(pong);
+    chip8.dissassemble();
     return (
       <div className="App">
         <header className="App-header">

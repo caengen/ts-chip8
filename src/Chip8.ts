@@ -1,25 +1,25 @@
 export default class Chip8 {
   public opcode: number;
   // 4K memory
-  public memory: Int8Array;
+  public memory: Uint8Array;
   // registers V0...VE
-  public V: Int8Array;
+  public V: Uint8Array;
   // index register
   public I: number;
   // program counter
   public pc: number;
   // pixel graphics. 2048 pixels total
-  public gfx: Int8Array;
+  public gfx: Uint8Array;
   // timer registers
   // 60 Hz timer registers
   public delayTimer: number;
   public soundTimer: number;
   // stack
-  public stack: Int16Array;
+  public stack: Uint16Array;
   public sp: number;
 
   // key state
-  public key: Int8Array;
+  public key: Uint8Array;
 
   /**
    * The system does not draw each cycle. This flag is set when the system
@@ -35,11 +35,11 @@ export default class Chip8 {
     this.I = 0;
     this.sp = 0;
 
-    this.memory = new Int8Array(4096);  
-    this.gfx = new Int8Array(64 * 32);
-    this.V = new Int8Array(16);
-    this.stack = new Int16Array(16);
-    this.key = new Int8Array(16);
+    this.memory = new Uint8Array(4096);  
+    this.gfx = new Uint8Array(64 * 32);
+    this.V = new Uint8Array(16);
+    this.stack = new Uint16Array(16);
+    this.key = new Uint8Array(16);
     
     //load font into memory
     
@@ -51,16 +51,12 @@ export default class Chip8 {
   /**
    * Copies program into memory
    */
-  public loadGame(file: Blob) {
+  public loadGame(file: string) {
     // load pong
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      const arrBuff = new Int8Array(fileReader.result as ArrayBuffer);
-      for (let i = 0; i < arrBuff.length; i++) {
-        this.memory[i + 512] = arrBuff[i];
-      }
+    const arrBuff = new TextEncoder().encode(file);
+    for (let i = 0; i < arrBuff.length; i++) {
+      this.memory[i + 512] = arrBuff[i];
     }
-    fileReader.readAsArrayBuffer(file);
   }
 
   public dissassemble() {
@@ -99,7 +95,7 @@ export default class Chip8 {
     if (opc === 0x00E0) {
       // clear screen
       console.log("0x00E0 Clear screen")
-      this.gfx = new Int8Array(64 * 32);
+      this.gfx = new Uint8Array(64 * 32);
     } 
     else if (opc === 0x00EE) {
       // return from subroutine
