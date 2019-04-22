@@ -1,25 +1,25 @@
 export default class Chip8 {
   public opcode: number;
   // 4K memory
-  public memory: Int8Array = new Int8Array(4096);
+  public memory!: Int8Array;
   // registers V0...VE
-  public V: Int8Array = new Int8Array(16);
+  public V: Int8Array;
   // index register
   public I: number;
   // program counter
   public pc: number;
   // pixel graphics. 2048 pixels total
-  public gfx: Int8Array = new Int8Array(64 * 32);
+  public gfx: Int8Array;
   // timer registers
   // 60 Hz timer registers
   public delayTimer: number;
   public soundTimer: number;
   // stack
-  public stack: Int16Array = new Int16Array(16);
+  public stack: Int16Array;
   public sp: number;
 
   // key state
-  public key: Int8Array = new Int8Array(16);
+  public key: Int8Array;
 
   /**
    * The system does not draw each cycle. This flag is set when the system
@@ -30,20 +30,22 @@ export default class Chip8 {
   public drawFlag: boolean;
 
   public constructor() {
-    this.opcode = 0x0;
-    this.I = 0x0;
-    this.pc = 0x0;
-    this.delayTimer = 0x0;
-    this.soundTimer = 0x0;
-    this.sp = 0x0;
-    this.drawFlag = false;
-  }
+    this.pc = 0x200;
+    this.opcode = 0;
+    this.I = 0;
+    this.sp = 0;
 
-  /**
-   * Clears the memory, registers and screen
-   */
-  public initialize() {
-    // Initialize registers and memory once
+    this.memory = new Int8Array(4096);  
+    this.gfx = new Int8Array(64 * 32);
+    this.V = new Int8Array(16);
+    this.stack = new Int16Array(16);
+    this.key = new Int8Array(16);
+    
+    //load font into memory
+    
+    this.delayTimer = 0;
+    this.soundTimer = 0;
+    this.drawFlag = false;
   }
 
   /**
@@ -56,25 +58,15 @@ export default class Chip8 {
   public emulateCycle() {
     // Fetch Opcode
     // opcode are two bytes so must be merged OR
-    this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1]
-    // Decode Opcode
-    // [operation, operand] = decode(opcode)
-    // Execute Opcode
-    // execute(operation, operand)
-
+    this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
+    // Decode and execute Opcode
+    this.execute(this.opcode);
     // Update timers
   }
 
   public setKeys() {
 
   }
-
-  public opcodeTable = {
-    0 : {
-
-    }
-  }
-
 
   /**
    * Execute opcode
