@@ -69,6 +69,13 @@ export default class Chip8 {
 
   }
 
+  public opcodeTable = {
+    0 : {
+
+    }
+  }
+
+
   /**
    * Execute opcode
    * Bit explanations:
@@ -83,137 +90,140 @@ export default class Chip8 {
   private execute(opc: number) {
     if (opc === 0x00E0) {
       // clear screen
+      console.log("0x00E0 Clear screen")
+      this.gfx = new Int8Array(64 * 32);
     } 
     else if (opc === 0x00EE) {
       // return from subroutine
+      console.log("0x00EE Return from subroutine")
     }
     // opcode 0x0NNN
     else if ((opc & 0xF000) === 0x0000) {
-      // call RCA 1802 program at NNN
+      console.log(`${opc} call RCA 1802 program at NNN`)
     }
     // opcode 0x1NNN
     else if ((opc & 0xF000) === 0x1000) {
-      // jump to address NNN
+      console.log(`${opc} jump to address NNN`)
     }
     // opcode 0x2NNN
     else if ((opc & 0xF000) === 0x2000) {
-      // call subroutine at address NNN
+      console.log(`${opc} call subroutine at address NNN`)
     }
     // opcode 0x3XNN
     else if ((opc & 0xF000) === 0x3000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x4XNN
     else if ((opc & 0xF000) === 0x4000) {
-      // Skips the next instruction if VX doesn't equal NN. 
+      console.log(`${opc} Skips the next instruction if VX doesn't equal NN. `)
     }
     // opcode 0x5XYN
     else if ((opc & 0xF000) === 0x5000) {
-      // Skips the next instruction if VX equals VY. 
+      console.log(`${opc} Skips the next instruction if VX equals VY. `)
     }
     // opcode 0x6XNN
     else if ((opc & 0xF000) === 0x6000) {
-      // Sets VX to NN.
+      console.log(`${opc} Sets VX to NN.`)
     }
     // opcode 0x7XNN
     else if ((opc & 0xF000) === 0x7000) {
-      //Adds NN to VX. (Carry flag is not changed)
+      console.log(`${opc} Adds NN to VX. (Carry flag is not changed)`)
     }
     // opcode 0x8XY0
     else if ((opc & 0xF00F) === 0x8000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY1
     else if ((opc & 0xF00F) === 0x8001) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY2
     else if ((opc & 0xF00F) === 0x8002) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY3
     else if ((opc & 0xF00F) === 0x8003) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY4
     else if ((opc & 0xF00F) === 0x8004) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY5
     else if ((opc & 0xF00F) === 0x8005) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY6
     else if ((opc & 0xF00F) === 0x8006) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XY7
     else if ((opc & 0xF00F) === 0x8007) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0x8XYE
     else if ((opc & 0xF00F) === 0x800E) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xANNN
     else if ((opc & 0xF000) === 0xA000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xBNNN
     else if ((opc & 0xF000) === 0xB000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xCXNN
     else if ((opc & 0xF000) === 0xC000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xDXYN
     else if ((opc & 0xF000) === 0xD000) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xEX9E
     else if ((opc & 0xF0FF) === 0xE09E) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xEXA1
     else if ((opc & 0xF0FF) === 0xE0A1) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX07
     else if ((opc & 0xF0FF) === 0xF007) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX0A
     else if ((opc & 0xF0FF) === 0xF00A) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX15
     else if ((opc & 0xF0FF) === 0xF015) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX18
     else if ((opc & 0xF0FF) === 0xF018) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX1E
     else if ((opc & 0xF0FF) === 0xF01E) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX29
     else if ((opc & 0xF0FF) === 0xF029) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX33
     else if ((opc & 0xF0FF) === 0xF033) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX55
     else if ((opc & 0xF0FF) === 0xF055) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
     // opcode 0xFX65
     else if ((opc & 0xF0FF) === 0xF065) {
-      // Skips the next instruction if VX equals NN.
+      console.log(`${opc} Skips the next instruction if VX equals NN.`)
     }
   }
 }
