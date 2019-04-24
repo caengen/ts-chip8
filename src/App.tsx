@@ -6,7 +6,6 @@ import pong from "./roms/Pong.ch8";
 
 function App() {
   const chip8 = new Chip8();
-  console.log(pong);
   chip8.loadGame(pong);
   chip8.dissassemble();
 

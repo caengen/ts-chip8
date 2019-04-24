@@ -227,5 +227,8 @@ export default class Chip8 {
     else if ((opc & 0xF0FF) === 0xF065) {
       console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
     }
+    else {
+      console.log(`${opc.toString(16)} Unknow opcode`);
+    }
   }
 }
