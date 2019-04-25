@@ -1,14 +1,11 @@
 import React from 'react';
+import { Loop } from "react-game-kit";
 import logo from "./logo.svg";
 import './App.css';
-import Chip8 from './Chip8';
 import pong from "./roms/Pong.ch8";
+import Chip8Emulator from './Chip8Emulator';
 
 function App() {
-  const chip8 = new Chip8();
-  chip8.loadGame(pong);
-  chip8.dissassemble();
-
   return (
     <div className="App">
       <header className="App-header">
@@ -25,6 +22,9 @@ function App() {
           Learn React
         </a>
       </header>
+      <Loop>
+        <Chip8Emulator chip8File={pong} />
+      </Loop>
     </div>
   );
 }

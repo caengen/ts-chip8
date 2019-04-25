@@ -41,6 +41,8 @@ declare module '*.webp' {
 
 declare module '*.ch8';
 
+declare module 'react-game-kit';
+
 declare module '*.svg' {
   import * as React from 'react';
 
