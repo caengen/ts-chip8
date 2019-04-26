@@ -127,12 +127,21 @@ export default class Chip8 {
         break;
       case 0x3000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        if (this.V[(opc & 0x0F00)] === (opc & 0x00FF)) {
+          this.pc += 4;
+        }
         break;
       case 0x4000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN. `)
+        console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
+        if (this.V[(opc & 0x0F00)] !== (opc & 0x00FF)) {
+          this.pc += 4;
+        }
         break;
       case 0x5000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY. `)
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
+        if (this.V[(opc & 0x0F00)] === this.V[(opc & 0x00FF)]) {
+          this.pc += 4;
+        }
         break;
       case 0x6000:
         console.log(`${opc.toString(16)} Sets VX to NN.`)
