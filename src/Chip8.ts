@@ -109,6 +109,8 @@ export default class Chip8 {
             break;
           case 0x000E:
             console.log("0x00EE Return from subroutine")
+            this.sp--;
+            this.pc = this.stack[this.sp];
             break;
           default:
             console.log(`${opc.toString(16)} call RCA 1802 program at NNN`)
