@@ -129,52 +129,52 @@ export default class Chip8 {
         break;
       case 0x3000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-        if (this.V[opc & 0x0F00] === (opc & 0x00FF)) {
+        if (this.V[(opc & 0x0F00) >> 8] === (opc & 0x00FF)) {
           this.pc += 4;
         }
         break;
       case 0x4000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
-        if (this.V[opc & 0x0F00] !== (opc & 0x00FF)) {
+        if (this.V[(opc & 0x0F00) >> 8] !== (opc & 0x00FF)) {
           this.pc += 4;
         }
         break;
       case 0x5000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
-        if (this.V[opc & 0x0F00] === this.V[opc & 0x00FF]) {
+        if (this.V[(opc & 0x0F00) >> 8] === this.V[(opc & 0x00F0) >> 4]) {
           this.pc += 4;
         }
         break;
       case 0x6000:
         console.log(`${opc.toString(16)} Sets VX to NN.`)
-        this.V[opc & 0x0F00] = opc & 0x00FF;
+        this.V[(opc & 0x0F00) >> 8] = opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x7000:
         console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
-        this.V[opc & 0x0F00] += opc & 0x00FF;
+        this.V[(opc & 0x0F00) >> 8] += opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x8000:
         switch (opc & 0x000F) {
           case 0x0000:
             console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
-            this.V[opc & 0x0F00] = this.V[opc & 0x00F0];
+            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x00F0) >> 4];
             this.pc += 2;
             break;
           case 0x0001:
             console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
-            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] | this.V[opc & 0x00F0];
+            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] | this.V[(opc & 0x00F0) >> 4];
             this.pc += 2;
             break;
           case 0x0002:
             console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
-            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] & this.V[opc & 0x00F0];
+            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] & this.V[(opc & 0x00F0) >> 4];
             this.pc += 2;
             break;
           case 0x0003:
             console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
-            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] ^ this.V[opc & 0x00F0];
+            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] ^ this.V[(opc & 0x00F0) >> 4];
             this.pc += 2;
             break;
           case 0x0004:
@@ -199,7 +199,7 @@ export default class Chip8 {
         break;
       case 0x9000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
-        if (this.V[opc & 0x0F00] !== this.V[opc & 0x00F0]) {
+        if (this.V[(opc & 0x0F00) >> 8] !== this.V[(opc & 0x00F0) >> 4]) {
           this.pc += 4;
         }
         break;
@@ -239,22 +239,22 @@ export default class Chip8 {
         switch (opc & 0x00FF) {
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
-            this.V[opc & 0x0F00] = this.delayTimer;
+            this.V[(opc & 0x0F00) >> 8] = this.delayTimer;
             break;
           case 0x000A:
             console.log(`${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`)
             break;
           case 0x0015:
             console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
-            this.delayTimer = this.V[opc & 0x0F00];
+            this.delayTimer = this.V[(opc & 0x0F00) >> 8];
             break;
           case 0x0018:
             console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
-            this.soundTimer = this.V[opc & 0x0F00];
+            this.soundTimer = this.V[(opc & 0x0F00) >> 8];
             break;
           case 0x001E:
             console.log(`${opc.toString(16)} Adds VX to I.`)
-            this.I += this.V[opc & 0x0F00];
+            this.I += this.V[(opc & 0x0F00) >> 8];
             this.pc += 2;
             break;
           case 0x0029:
