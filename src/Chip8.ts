@@ -113,10 +113,11 @@ export default class Chip8 {
             this.pc = this.stack[this.sp];
             break;
           default:
-            console.log(`${opc.toString(16)} call RCA 1802 program at NNN`)
+            console.log(`${opc.toString(16)} call RCA 1802 program at NNN`);
         }
       case 0x1000:
         console.log(`${opc.toString(16)} jump to address NNN`)
+        this.pc = opc & 0x0FFF;
         break;
       case 0x2000:
         console.log(`${opc.toString(16)} call subroutine at address NNN`)
