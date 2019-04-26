@@ -100,145 +100,126 @@ export default class Chip8 {
    * @param opc opcode
    */
   private execute(opc: number) {
-    if (opc === 0x00E0) {
-      // clear screen
-      console.log("0x00E0 Clear screen")
-      this.gfx = new Uint8Array(64 * 32);
-    } 
-    else if (opc === 0x00EE) {
-      // return from subroutine
-      console.log("0x00EE Return from subroutine")
-    }
-    // opcode 0x0NNN
-    else if ((opc & 0xF000) === 0x0000) {
-      console.log(`${opc.toString(16)} call RCA 1802 program at NNN`)
-    }
-    // opcode 0x1NNN
-    else if ((opc & 0xF000) === 0x1000) {
-      console.log(`${opc.toString(16)} jump to address NNN`)
-    }
-    // opcode 0x2NNN
-    else if ((opc & 0xF000) === 0x2000) {
-      console.log(`${opc.toString(16)} call subroutine at address NNN`)
-    }
-    // opcode 0x3XNN
-    else if ((opc & 0xF000) === 0x3000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x4XNN
-    else if ((opc & 0xF000) === 0x4000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN. `)
-    }
-    // opcode 0x5XYN
-    else if ((opc & 0xF000) === 0x5000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY. `)
-    }
-    // opcode 0x6XNN
-    else if ((opc & 0xF000) === 0x6000) {
-      console.log(`${opc.toString(16)} Sets VX to NN.`)
-    }
-    // opcode 0x7XNN
-    else if ((opc & 0xF000) === 0x7000) {
-      console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
-    }
-    // opcode 0x8XY0
-    else if ((opc & 0xF00F) === 0x8000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY1
-    else if ((opc & 0xF00F) === 0x8001) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY2
-    else if ((opc & 0xF00F) === 0x8002) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY3
-    else if ((opc & 0xF00F) === 0x8003) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY4
-    else if ((opc & 0xF00F) === 0x8004) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY5
-    else if ((opc & 0xF00F) === 0x8005) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY6
-    else if ((opc & 0xF00F) === 0x8006) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XY7
-    else if ((opc & 0xF00F) === 0x8007) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0x8XYE
-    else if ((opc & 0xF00F) === 0x800E) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xANNN
-    else if ((opc & 0xF000) === 0xA000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xBNNN
-    else if ((opc & 0xF000) === 0xB000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xCXNN
-    else if ((opc & 0xF000) === 0xC000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xDXYN
-    else if ((opc & 0xF000) === 0xD000) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xEX9E
-    else if ((opc & 0xF0FF) === 0xE09E) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xEXA1
-    else if ((opc & 0xF0FF) === 0xE0A1) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX07
-    else if ((opc & 0xF0FF) === 0xF007) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX0A
-    else if ((opc & 0xF0FF) === 0xF00A) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX15
-    else if ((opc & 0xF0FF) === 0xF015) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX18
-    else if ((opc & 0xF0FF) === 0xF018) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX1E
-    else if ((opc & 0xF0FF) === 0xF01E) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX29
-    else if ((opc & 0xF0FF) === 0xF029) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX33
-    else if ((opc & 0xF0FF) === 0xF033) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX55
-    else if ((opc & 0xF0FF) === 0xF055) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    // opcode 0xFX65
-    else if ((opc & 0xF0FF) === 0xF065) {
-      console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-    }
-    else {
-      console.log(`${opc.toString(16)} Unknow opcode`);
+    switch (opc & 0xF000) {
+      case 0:
+        switch (opc & 0x00FF) {
+          case 0x00E0:
+            console.log("0x00E0 Clear screen")
+            this.gfx = new Uint8Array(64 * 32);
+            break;
+          case 0x00EE:
+            console.log("0x00EE Return from subroutine")
+            break;
+          default:
+            console.log(`${opc.toString(16)} call RCA 1802 program at NNN`)
+        }
+      case 1:
+        console.log(`${opc.toString(16)} jump to address NNN`)
+        break;
+      case 2:
+        console.log(`${opc.toString(16)} call subroutine at address NNN`)
+        break;
+      case 3:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        break;
+      case 4:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN. `)
+        break;
+      case 5:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY. `)
+        break;
+      case 6:
+        console.log(`${opc.toString(16)} Sets VX to NN.`)
+        break;
+      case 7:
+        console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
+        break;
+      case 8:
+        switch (opc & 0x000F) {
+          case 0:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 1:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 2:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 3:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 4:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 5:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 6:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 7:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 0xE:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+        }
+        break;
+      case 0xA:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        break;
+      case 0xB:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        break;
+      case 0xC:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        break;
+      case 0xD:
+        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        break;
+      case 0xE:
+        switch (opc & 0x000F) {
+          case 0xE:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 1:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+        }
+        break;
+      case 0xF:
+        switch (opc & 0x00FF) {
+          case 7:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 0xA:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 15:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 18:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 0x1E:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 29:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 33:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 55:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+          case 65:
+            console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+            break;
+        }
+        break;
+      default:
+        console.log(`${opc.toString(16)} Unknow opcode`);
     }
   }
 }
