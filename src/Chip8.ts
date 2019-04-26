@@ -175,9 +175,11 @@ export default class Chip8 {
             break;
           case 0x0005:
             console.log(`${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
+            // TODO
             break;
           case 0x0006:
             console.log(`${opc.toString(16)} Stores the least significant bit of VX in VF and then shifts VX to the right by 1.`)
+            // TODO
             break;
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
@@ -189,6 +191,9 @@ export default class Chip8 {
         break;
       case 0x9000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
+        if (this.V[opc & 0x0F00] !== this.V[opc & 0x00F0]) {
+          this.pc += 4;
+        }
         break;
       case 0xA000:
         console.log(`${opc.toString(16)} Sets I to the address NNN.`)
