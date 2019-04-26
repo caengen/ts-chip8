@@ -106,6 +106,7 @@ export default class Chip8 {
           case 0x0000:
             console.log("0x00E0 Clear screen")
             this.gfx = new Uint8Array(64 * 32);
+            this.pc += 2;
             break;
           case 0x000E:
             console.log("0x00EE Return from subroutine")
@@ -114,6 +115,7 @@ export default class Chip8 {
             break;
           default:
             console.log(`${opc.toString(16)} call RCA 1802 program at NNN`);
+            this.pc += 2;
         }
       case 0x1000:
         console.log(`${opc.toString(16)} jump to address NNN`)
@@ -146,28 +148,34 @@ export default class Chip8 {
       case 0x6000:
         console.log(`${opc.toString(16)} Sets VX to NN.`)
         this.V[opc & 0x0F00] = opc & 0x00FF;
+        this.pc += 2;
         break;
       case 0x7000:
         console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
         this.V[opc & 0x0F00] += opc & 0x00FF;
+        this.pc += 2;
         break;
       case 0x8000:
         switch (opc & 0x000F) {
           case 0x0000:
             console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
             this.V[opc & 0x0F00] = this.V[opc & 0x00F0];
+            this.pc += 2;
             break;
           case 0x0001:
             console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
             this.V[opc & 0x0F00] = this.V[opc & 0x0F00] | this.V[opc & 0x00F0];
+            this.pc += 2;
             break;
           case 0x0002:
             console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
             this.V[opc & 0x0F00] = this.V[opc & 0x0F00] & this.V[opc & 0x00F0];
+            this.pc += 2;
             break;
           case 0x0003:
             console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
             this.V[opc & 0x0F00] = this.V[opc & 0x0F00] ^ this.V[opc & 0x00F0];
+            this.pc += 2;
             break;
           case 0x0004:
             console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`)
@@ -197,6 +205,8 @@ export default class Chip8 {
         break;
       case 0xA000:
         console.log(`${opc.toString(16)} Sets I to the address NNN.`)
+        this.I = opc & 0x0FFF;
+        this.pc += 2;
         break;
       case 0xB000:
         console.log(`${opc.toString(16)} Jumps to the address NNN plus V0`)
