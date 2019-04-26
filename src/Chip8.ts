@@ -1,3 +1,5 @@
+import font from "./Chip8Font";
+
 export default class Chip8 {
   public opcode: number;
   // 4K memory
@@ -41,7 +43,7 @@ export default class Chip8 {
     this.stack = new Uint16Array(16);
     this.key = new Uint8Array(16);
     
-    //load font into memory
+    this.loadFont();
     
     this.delayTimer = 0;
     this.soundTimer = 0;
@@ -76,6 +78,14 @@ export default class Chip8 {
 
   public setKeys() {
 
+  }
+
+  private loadFont() {
+    for (let i = 0; i < font.length; i++) {
+      for (let j = 0; j < font[i].length; j++) {
+        this.memory[i + j] = font[i][j];
+      }
+    }
   }
 
   /**
