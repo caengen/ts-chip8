@@ -127,7 +127,7 @@ export default class Chip8 {
         break;
       case 0x3000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-        if (this.V[(opc & 0x0F00)] === (opc & 0x00FF)) {
+        if (this.V[opc & 0x0F00] === (opc & 0x00FF)) {
           this.pc += 4;
         }
         break;
@@ -155,18 +155,23 @@ export default class Chip8 {
         switch (opc & 0x000F) {
           case 0x0000:
             console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
+            this.V[opc & 0x0F00] = this.V[opc & 0x00F0];
             break;
           case 0x0001:
-            console.log(`${opc.toString(16)} Sets VX to VX or VY. (Bitwise OR operation)`)
+            console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
+            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] | this.V[opc & 0x00F0];
             break;
           case 0x0002:
-            console.log(`${opc.toString(16)} Sets VX to VX and VY. (Bitwise AND operation)`)
+            console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
+            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] & this.V[opc & 0x00F0];
             break;
           case 0x0003:
-            console.log(`${opc.toString(16)} Sets VX to VX xor VY.`)
+            console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
+            this.V[opc & 0x0F00] = this.V[opc & 0x0F00] ^ this.V[opc & 0x00F0];
             break;
           case 0x0004:
             console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`)
+            // TODO
             break;
           case 0x0005:
             console.log(`${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
