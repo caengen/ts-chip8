@@ -281,6 +281,10 @@ export default class Chip8 {
             break;
           case 0x0065:
             console.log(`${opc.toString(16)} Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
+            for (let i = 0; i < (opc & 0x0F00) >> 8; i++) {
+              this.V[i] = this.memory[this.I + i];
+            }
+            this.pc += 2;
             break;
         }
         break;
