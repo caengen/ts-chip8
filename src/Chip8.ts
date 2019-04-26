@@ -239,18 +239,23 @@ export default class Chip8 {
         switch (opc & 0x00FF) {
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
+            this.V[opc & 0x0F00] = this.delayTimer;
             break;
           case 0x000A:
             console.log(`${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`)
             break;
           case 0x0015:
             console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
+            this.delayTimer = this.V[opc & 0x0F00];
             break;
           case 0x0018:
             console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
+            this.soundTimer = this.V[opc & 0x0F00];
             break;
           case 0x001E:
             console.log(`${opc.toString(16)} Adds VX to I.`)
+            this.I += this.V[opc & 0x0F00];
+            this.pc += 2;
             break;
           case 0x0029:
             console.log(`${opc.toString(16)} Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.`)
