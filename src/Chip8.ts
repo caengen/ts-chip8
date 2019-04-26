@@ -229,8 +229,13 @@ export default class Chip8 {
            * I plus 2. (In other words, take the decimal representation of 
            * VX, place the hundreds digit in memory at location in I, the 
            * tens digit at location I+1, and the ones digit at location I+2.)
+           * Implementation source: http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8.shtml
            */
             console.log(`${opc.toString(16)} Store binary-coded decimal representation of VX`)
+            this.memory[this.I]     = this.V[(opc & 0x0F00) >> 8] / 100;
+            this.memory[this.I + 1] = this.V[(opc & 0x0F00) >> 8 ] / 10;
+            this.memory[this.I + 2] = this.V[(opc & 0x0F00) >> 8 ] % 10;
+            this.pc += 2;
             break;
           case 0x0055:
             console.log(`${opc.toString(16)} Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
