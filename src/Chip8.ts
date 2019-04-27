@@ -73,10 +73,8 @@ export default class Chip8 {
   }
 
   public emulateCycle() {
-    // Fetch Opcode
     // opcode are two bytes so must be merged OR
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
-    // Decode and execute Opcode
     this.execute(this.opcode);
     this.updateTimers();
     this.pc += 2;
@@ -103,6 +101,9 @@ export default class Chip8 {
     if (newTimestamp - this.timerTimestamp > (1000 / 60)) {
       if (this.soundTimer > 0) {
         this.soundTimer--;
+        if (this.soundTimer === 0) {
+          // TODO: Buzz!
+        }
       }
       
       if (this.delayTimer > 0) {
@@ -156,18 +157,24 @@ export default class Chip8 {
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
         if (this.V[(opc & 0x0F00) >> 8] === (opc & 0x00FF)) {
           this.pc += 4;
+        } else {
+          this.pc += 2;
         }
         break;
       case 0x4000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
         if (this.V[(opc & 0x0F00) >> 8] !== (opc & 0x00FF)) {
           this.pc += 4;
+        } else {
+          this.pc += 2;
         }
         break;
       case 0x5000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
         if (this.V[(opc & 0x0F00) >> 8] === this.V[(opc & 0x00F0) >> 4]) {
           this.pc += 4;
+        } else {
+          this.pc += 2;
         }
         break;
       case 0x6000:
@@ -203,7 +210,15 @@ export default class Chip8 {
             this.pc += 2;
             break;
           case 0x0004:
-            console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`)
+            console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`);
+            const result = this.V[(opc & 0x0F00) >> 8] + this.V[(opc & 0x00F0) >> 4];
+            if (result > 255) {
+              this.V[0xF] = 1;
+            } else {
+              this.V[0xF] = 0;
+            }
+            this.V[(opc & 0x0F00) >> 8] = result % 255;
+            this.pc += 2;
             // TODO
             break;
           case 0x0005:
