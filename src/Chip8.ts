@@ -16,6 +16,9 @@ export default class Chip8 {
   // 60 Hz timer registers
   public delayTimer: number;
   public soundTimer: number;
+  private timerTimestamp: number;
+  public fps: number;
+  private updateFps?: (fps: number) => void;
   // stack
   public stack: Uint16Array;
   public sp: number;
@@ -31,7 +34,7 @@ export default class Chip8 {
    */
   public drawFlag: boolean;
 
-  public constructor() {
+  public constructor(updateFps?: (fps: number) => void) {
     this.pc = 0x200;
     this.opcode = 0;
     this.I = 0;
@@ -47,6 +50,9 @@ export default class Chip8 {
     
     this.delayTimer = 0;
     this.soundTimer = 0;
+    this.timerTimestamp = 0;
+    this.fps = 0;
+    this.updateFps = updateFps;
     this.drawFlag = false;
   }
 
@@ -72,7 +78,7 @@ export default class Chip8 {
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
     // Decode and execute Opcode
     this.execute(this.opcode);
-    // Update timers
+    this.updateTimers();
     this.pc += 2;
   }
 
@@ -85,6 +91,25 @@ export default class Chip8 {
       for (let j = 0; j < font[i].length; j++) {
         this.memory[i + j] = font[i][j];
       }
+    }
+  }
+
+  private updateTimers() {
+    const newTimestamp = Date.now();
+    /*
+    this.fps = Math.round(1000 / (newTimestamp - this.timerTimestamp));
+    this.updateFps && this.updateFps(this.fps);
+    */
+    if (newTimestamp - this.timerTimestamp > (1000 / 60)) {
+      if (this.soundTimer > 0) {
+        this.soundTimer--;
+      }
+      
+      if (this.delayTimer > 0) {
+        this.delayTimer--;
+      }
+      
+      this.timerTimestamp = newTimestamp;
     }
   }
 

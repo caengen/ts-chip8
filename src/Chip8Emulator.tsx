@@ -6,8 +6,12 @@ export interface IChip8EmulatorProps {
   chip8File: string;
 }
 
-export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, any> {
-  private chip8 = new Chip8();
+export interface IChip8EmulatorState {
+  fps: number;
+}
+
+export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, IChip8EmulatorState> {
+  private chip8: Chip8;
   static contextTypes = {
     loop: PropTypes.object,
   };
@@ -15,6 +19,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
   constructor(props: IChip8EmulatorProps) {
     super(props);
 
+    this.chip8 = new Chip8(this.updateFps);
     this.chip8.loadGame(props.chip8File);
   }
 
@@ -29,6 +34,8 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
   update = () => {
     this.chip8.emulateCycle();
   }
+
+  updateFps = (fps: number) => this.setState({ fps });
 
   render() {
     return (
