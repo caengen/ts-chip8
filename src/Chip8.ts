@@ -19,6 +19,7 @@ export default class Chip8 {
   private timerTimestamp: number;
   public fps: number;
   private updateFps?: (fps: number) => void;
+  private updateGfx: (gfx: Uint8Array) => void;
   // stack
   public stack: Uint16Array;
   public sp: number;
@@ -34,7 +35,7 @@ export default class Chip8 {
    */
   public drawFlag: boolean;
 
-  public constructor(updateFps?: (fps: number) => void) {
+  public constructor(updateGfx: (gfx: Uint8Array) => void, updateFps?: (fps: number) => void) {
     this.pc = 0x200;
     this.opcode = 0;
     this.I = 0;
@@ -53,6 +54,7 @@ export default class Chip8 {
     this.timerTimestamp = 0;
     this.fps = 0;
     this.updateFps = updateFps;
+    this.updateGfx = updateGfx;
     this.drawFlag = false;
   }
 
@@ -77,7 +79,10 @@ export default class Chip8 {
     this.opcode = this.memory[this.pc] << 8 | this.memory[this.pc + 1];
     this.execute(this.opcode);
     this.updateTimers();
-    this.pc += 2;
+
+    if (this.drawFlag) {
+      this.updateGfx(this.gfx);
+    }
   }
 
   public setKeys() {
