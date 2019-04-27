@@ -10,7 +10,7 @@ export default class Chip8 {
   public I: number;
   // program counter
   public pc: number;
-  // pixel graphics. 2048 pixels total
+  // pixel graphics. 64x34, 2048 pixels total
   public gfx: Uint8Array;
   // timer registers
   // 60 Hz timer registers
@@ -101,7 +101,7 @@ export default class Chip8 {
     if (newTimestamp - this.timerTimestamp > (1000 / 60)) {
       if (this.soundTimer > 0) {
         this.soundTimer--;
-        if (this.soundTimer === 0) {
+        if (this.soundTimer > 0) {
           // TODO: Buzz!
         }
       }
@@ -255,15 +255,35 @@ export default class Chip8 {
         console.log(`${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`)
         break;
       case 0xD000:
-      /**
-       * Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and
-       * a height of N pixels. Each row of 8 pixels is read as bit-coded 
-       * starting from memory location I; I value doesn’t change after the 
-       * execution of this instruction. As described above, VF is set to 1 if 
-       * any screen pixels are flipped from set to unset when the sprite is 
-       * drawn, and to 0 if that doesn’t happen
-       */
+        /**
+         * Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and
+         * a height of N pixels. Each row of 8 pixels is read as bit-coded 
+         * starting from memory location I; I value doesn’t change after the 
+         * execution of this instruction. As described above, VF is set to 1 if 
+         * any screen pixels are flipped from set to unset when the sprite is 
+         * drawn, and to 0 if that doesn’t happen
+         */
         console.log(`${opc.toString(16)} Draws a sprite at coordinate (VX, VY)`)
+        const x = this.V[(opc & 0x0F00) >> 8];
+        const y = this.V[(opc & 0x00F0) >> 4];
+        const height = this.V[(opc & 0x000F)];
+
+        this.V[0xF] = 0;
+        for (let yline = 0; yline < height; yline++) {
+          const pixels = this.memory[this.I + yline];
+          for (let xline = 0; xline < 8; xline++) {
+            // start on the leftmost bit and check if any bits in the line are 1
+            if ((pixels & (0x80 >> xline)) === 1) {
+              // check if pixel to be fliped is set and set VF (collision) accordingly
+              if (this.gfx[x + xline + ((y + yline) * 64)] === 1) {
+                this.V[0xF] = 1;
+              }
+              this.gfx[x + xline + ((y + yline) * 64)] ^= 1;
+            }
+          }
+        }
+        this.drawFlag = true;
+        this.pc += 2;
         break;
       case 0xE000:
         switch (opc & 0x000F) {
