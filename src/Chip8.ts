@@ -147,6 +147,7 @@ export default class Chip8 {
           default:
             console.log(`${opc.toString(16)} call RCA 1802 program at NNN`);
             this.pc += 2;
+            break;
         }
       case 0x1000:
         console.log(`${opc.toString(16)} jump to address NNN`)
@@ -228,17 +229,21 @@ export default class Chip8 {
             break;
           case 0x0005:
             console.log(`${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
+            this.pc += 2;
             // TODO
             break;
           case 0x0006:
             console.log(`${opc.toString(16)} Stores the least significant bit of VX in VF and then shifts VX to the right by 1.`)
+            this.pc += 2;
             // TODO
             break;
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
+            this.pc += 2;
             break;
           case 0x000E:
             console.log(`${opc.toString(16)} Stores the most significant bit of VX in VF and then shifts VX to the left by 1.`)
+            this.pc += 2;
             break;
         }
         break;
@@ -246,6 +251,8 @@ export default class Chip8 {
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
         if (this.V[(opc & 0x0F00) >> 8] !== this.V[(opc & 0x00F0) >> 4]) {
           this.pc += 4;
+        } else {
+          this.pc += 2;
         }
         break;
       case 0xA000:
@@ -255,9 +262,11 @@ export default class Chip8 {
         break;
       case 0xB000:
         console.log(`${opc.toString(16)} Jumps to the address NNN plus V0`)
+        this.pc += 2;
         break;
       case 0xC000:
         console.log(`${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`)
+        this.pc += 2;
         break;
       case 0xD000:
         /**
@@ -294,9 +303,15 @@ export default class Chip8 {
         switch (opc & 0x000F) {
           case 0x000E:
             console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block).`)
+            this.pc += 2;
             break;
           case 0x0001:
             console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block).`)
+            this.pc += 2;
+            break;
+          default:
+            console.log(`${opc.toString(16)} Unknown instruction`);
+            this.pc += 2;
             break;
         }
         break;
@@ -305,17 +320,21 @@ export default class Chip8 {
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
             this.V[(opc & 0x0F00) >> 8] = this.delayTimer;
+            this.pc += 2;
             break;
           case 0x000A:
             console.log(`${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`)
+            this.pc += 2;
             break;
           case 0x0015:
             console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
             this.delayTimer = this.V[(opc & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           case 0x0018:
             console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
             this.soundTimer = this.V[(opc & 0x0F00) >> 8];
+            this.pc += 2;
             break;
           case 0x001E:
             console.log(`${opc.toString(16)} Adds VX to I.`)
@@ -324,6 +343,7 @@ export default class Chip8 {
             break;
           case 0x0029:
             console.log(`${opc.toString(16)} Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.`)
+            this.pc += 2;
             break;
           case 0x0033:
           /**
@@ -360,6 +380,7 @@ export default class Chip8 {
       default:
         console.log(`${opc.toString(16)} Unknow opcode`);
         this.pc += 2;
+        break;
     }
   }
 }
