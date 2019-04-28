@@ -161,7 +161,7 @@ export default class Chip8 {
         break;
       case 0x3000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
-        if (this.V[(opc & 0x0F00) >> 8] === (opc & 0x00FF)) {
+        if (this.V[(opc & 0x0F00) >>> 8] === (opc & 0x00FF)) {
           this.pc += 4;
         } else {
           this.pc += 2;
@@ -169,7 +169,7 @@ export default class Chip8 {
         break;
       case 0x4000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
-        if (this.V[(opc & 0x0F00) >> 8] !== (opc & 0x00FF)) {
+        if (this.V[(opc & 0x0F00) >>> 8] !== (opc & 0x00FF)) {
           this.pc += 4;
         } else {
           this.pc += 2;
@@ -177,7 +177,7 @@ export default class Chip8 {
         break;
       case 0x5000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
-        if (this.V[(opc & 0x0F00) >> 8] === this.V[(opc & 0x00F0) >> 4]) {
+        if (this.V[(opc & 0x0F00) >>> 8] === this.V[(opc & 0x00F0) >>> 4]) {
           this.pc += 4;
         } else {
           this.pc += 2;
@@ -185,45 +185,45 @@ export default class Chip8 {
         break;
       case 0x6000:
         console.log(`${opc.toString(16)} Sets VX to NN.`)
-        this.V[(opc & 0x0F00) >> 8] = opc & 0x00FF;
+        this.V[(opc & 0x0F00) >>> 8] = opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x7000:
         console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
-        this.V[(opc & 0x0F00) >> 8] += opc & 0x00FF;
+        this.V[(opc & 0x0F00) >>> 8] += opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x8000:
         switch (opc & 0x000F) {
           case 0x0000:
             console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
-            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x00F0) >> 4];
+            this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0001:
             console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
-            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] | this.V[(opc & 0x00F0) >> 4];
+            this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] | this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0002:
             console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
-            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] & this.V[(opc & 0x00F0) >> 4];
+            this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] & this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0003:
             console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
-            this.V[(opc & 0x0F00) >> 8] = this.V[(opc & 0x0F00) >> 8] ^ this.V[(opc & 0x00F0) >> 4];
+            this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] ^ this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0004:
             console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`);
-            const result = this.V[(opc & 0x0F00) >> 8] + this.V[(opc & 0x00F0) >> 4];
+            const result = this.V[(opc & 0x0F00) >>> 8] + this.V[(opc & 0x00F0) >>> 4];
             if (result > 255) {
               this.V[0xF] = 1;
             } else {
               this.V[0xF] = 0;
             }
-            this.V[(opc & 0x0F00) >> 8] = result % 255;
+            this.V[(opc & 0x0F00) >>> 8] = result % 255;
             this.pc += 2;
             // TODO
             break;
@@ -252,7 +252,7 @@ export default class Chip8 {
         break;
       case 0x9000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
-        if (this.V[(opc & 0x0F00) >> 8] !== this.V[(opc & 0x00F0) >> 4]) {
+        if (this.V[(opc & 0x0F00) >>> 8] !== this.V[(opc & 0x00F0) >>> 4]) {
           this.pc += 4;
         } else {
           this.pc += 2;
@@ -281,8 +281,8 @@ export default class Chip8 {
          * drawn, and to 0 if that doesn’t happen
          */
         console.log(`${opc.toString(16)} Draws a sprite at coordinate (VX, VY)`)
-        const x = this.V[(opc & 0x0F00) >> 8];
-        const y = this.V[(opc & 0x00F0) >> 4];
+        const x = this.V[(opc & 0x0F00) >>> 8];
+        const y = this.V[(opc & 0x00F0) >>> 4];
         const height = this.V[(opc & 0x000F)];
 
         this.V[0xF] = 0;
@@ -290,7 +290,7 @@ export default class Chip8 {
           const pixels = this.memory[this.I + yline];
           for (let xline = 0; xline < 8; xline++) {
             // start on the leftmost bit and check if any bits in the line are 1
-            if ((pixels & (0x80 >> xline)) === 1) {
+            if ((pixels & (0x80 >>> xline)) === 1) {
               // check if pixel to be fliped is set and set VF (collision) accordingly
               if (this.gfx[x + xline + ((y + yline) * 64)] === 1) {
                 this.V[0xF] = 1;
@@ -322,7 +322,7 @@ export default class Chip8 {
         switch (opc & 0x00FF) {
           case 0x0007:
             console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
-            this.V[(opc & 0x0F00) >> 8] = this.delayTimer;
+            this.V[(opc & 0x0F00) >>> 8] = this.delayTimer;
             this.pc += 2;
             break;
           case 0x000A:
@@ -331,17 +331,17 @@ export default class Chip8 {
             break;
           case 0x0015:
             console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
-            this.delayTimer = this.V[(opc & 0x0F00) >> 8];
+            this.delayTimer = this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x0018:
             console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
-            this.soundTimer = this.V[(opc & 0x0F00) >> 8];
+            this.soundTimer = this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x001E:
             console.log(`${opc.toString(16)} Adds VX to I.`)
-            this.I += this.V[(opc & 0x0F00) >> 8];
+            this.I += this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x0029:
@@ -359,21 +359,21 @@ export default class Chip8 {
            * Implementation source: http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8.shtml
            */
             console.log(`${opc.toString(16)} Store binary-coded decimal representation of VX`)
-            this.memory[this.I]     = this.V[(opc & 0x0F00) >> 8] / 100;
-            this.memory[this.I + 1] = this.V[(opc & 0x0F00) >> 8 ] / 10;
-            this.memory[this.I + 2] = this.V[(opc & 0x0F00) >> 8 ] % 10;
+            this.memory[this.I]     = this.V[(opc & 0x0F00) >>> 8] / 100;
+            this.memory[this.I + 1] = this.V[(opc & 0x0F00) >>> 8 ] / 10;
+            this.memory[this.I + 2] = this.V[(opc & 0x0F00) >>> 8 ] % 10;
             this.pc += 2;
             break;
           case 0x0055:
             console.log(`${opc.toString(16)} Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
-            for (let i = 0; i < (opc & 0x0F00) >> 8; i++) {
+            for (let i = 0; i < (opc & 0x0F00) >>> 8; i++) {
               this.memory[this.I + i] = this.V[i];
             }
             this.pc += 2;
             break;
           case 0x0065:
             console.log(`${opc.toString(16)} Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
-            for (let i = 0; i < (opc & 0x0F00) >> 8; i++) {
+            for (let i = 0; i < (opc & 0x0F00) >>> 8; i++) {
               this.V[i] = this.memory[this.I + i];
             }
             this.pc += 2;
