@@ -156,7 +156,7 @@ export default class Chip8 {
         console.log(`${opc.toString(16)} call subroutine at address NNN`)
         this.stack[this.sp] = this.pc;
         this.sp++;
-        this.pc = opc & 0xFFF;
+        this.pc = opc & 0x0FFF;
         break;
       case 0x3000:
         console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
@@ -359,6 +359,7 @@ export default class Chip8 {
         break;
       default:
         console.log(`${opc.toString(16)} Unknow opcode`);
+        this.pc += 2;
     }
   }
 }

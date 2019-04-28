@@ -41,8 +41,6 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
   updateGfx = (gfx: Uint8Array) => this.setState({ gfx });
   updateFps = (fps: number) => this.setState({ fps });
 
-  componentDidUpdate() {
-  }
 
   render() {
     return (
