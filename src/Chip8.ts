@@ -245,6 +245,9 @@ export default class Chip8 {
             console.log(`${opc.toString(16)} Stores the most significant bit of VX in VF and then shifts VX to the left by 1.`)
             this.pc += 2;
             break;
+          default:
+            console.log(`${opc.toString(16)} Unknown opcode`);
+            this.pc += 2;
         }
         break;
       case 0x9000:
@@ -310,7 +313,7 @@ export default class Chip8 {
             this.pc += 2;
             break;
           default:
-            console.log(`${opc.toString(16)} Unknown instruction`);
+            console.log(`${opc.toString(16)} Unknown opcode`);
             this.pc += 2;
             break;
         }
@@ -375,6 +378,8 @@ export default class Chip8 {
             }
             this.pc += 2;
             break;
+          default:
+            console.log(`${opc.toString(16)} Unknown opcode`);
         }
         break;
       default:
