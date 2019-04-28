@@ -38,9 +38,20 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
     this.chip8.emulateCycle();
   }
 
-  updateGfx = (gfx: Uint8Array) => this.setState({ gfx });
+  updateGfx = (gfx: Uint8Array) => null;
   updateFps = (fps: number) => this.setState({ fps });
 
+  componentDidUpdate() {
+    const ctx = this.canvasRef.getContext('2d');
+    for (let x = 0; x < 64; x++) {
+      for (let y = 0; y < 32; y++) {
+        if (this.state.gfx[x + (y * 64)] === 1) {
+          ctx.fillRect(x, y, 1, 1);
+          console.log("filling rect")
+        }
+      }
+    }
+  }
 
   render() {
     return (
