@@ -62,8 +62,10 @@ export default class Chip8 {
    * Copies program into memory
    */
   public loadGame(file: string) {
-    for (let i = 0; i < file.length; i++) {
-      this.memory[i + 512] = file.charCodeAt(i);
+    const buf = new Buffer(file);
+    
+    for (let i = 0; i < buf.byteLength; i++) {
+      this.memory[i + 512] = buf.readUIntBE(i, 1);
     }
   }
 
@@ -248,6 +250,7 @@ export default class Chip8 {
           default:
             console.log(`${opc.toString(16)} Unknown opcode`);
             this.pc += 2;
+            break;
         }
         break;
       case 0x9000:
@@ -380,6 +383,8 @@ export default class Chip8 {
             break;
           default:
             console.log(`${opc.toString(16)} Unknown opcode`);
+            this.pc += 2;
+            break;
         }
         break;
       default:

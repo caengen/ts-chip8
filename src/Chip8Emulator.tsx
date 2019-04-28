@@ -28,6 +28,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
 
   componentDidMount() {
     this.context.loop.subscribe(this.update);
+    this.chip8.dissassemble();
   }
 
   componentWillUnmount() {
@@ -38,7 +39,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
     this.chip8.emulateCycle();
   }
 
-  updateGfx = (gfx: Uint8Array) => null;
+  updateGfx = (gfx: Uint8Array) => this.setState({ gfx });
   updateFps = (fps: number) => this.setState({ fps });
 
   componentDidUpdate() {
