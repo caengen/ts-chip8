@@ -27,6 +27,8 @@ export default class Chip8 {
   // key state
   public key: Uint8Array;
 
+  public debug?: boolean;
+
   /**
    * The system does not draw each cycle. This flag is set when the system
    * should draw. These opcodes sets the flag:
@@ -137,32 +139,32 @@ export default class Chip8 {
       case 0x0000:
         switch (opc & 0x000F) {
           case 0x0000:
-            console.log("0x00E0 Clear screen")
+            this.debug && console.log("0x00E0 Clear screen")
             this.gfx = new Uint8Array(64 * 32);
             this.pc += 2;
             break;
           case 0x000E:
-            console.log("0x00EE Return from subroutine")
+            this.debug && console.log("0x00EE Return from subroutine")
             this.sp--;
             this.pc = this.stack[this.sp];
             break;
           default:
-            console.log(`${opc.toString(16)} call RCA 1802 program at NNN`);
+            this.debug && console.log(`${opc.toString(16)} call RCA 1802 program at NNN`);
             this.pc += 2;
             break;
         }
       case 0x1000:
-        console.log(`${opc.toString(16)} jump to address NNN`)
+        this.debug && console.log(`${opc.toString(16)} jump to address NNN`)
         this.pc = opc & 0x0FFF;
         break;
       case 0x2000:
-        console.log(`${opc.toString(16)} call subroutine at address NNN`)
+        this.debug && console.log(`${opc.toString(16)} call subroutine at address NNN`)
         this.stack[this.sp] = this.pc;
         this.sp++;
         this.pc = opc & 0x0FFF;
         break;
       case 0x3000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
+        this.debug && console.log(`${opc.toString(16)} Skips the next instruction if VX equals NN.`)
         if (this.V[(opc & 0x0F00) >>> 8] === (opc & 0x00FF)) {
           this.pc += 4;
         } else {
@@ -170,7 +172,7 @@ export default class Chip8 {
         }
         break;
       case 0x4000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
+        this.debug && console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal NN.`)
         if (this.V[(opc & 0x0F00) >>> 8] !== (opc & 0x00FF)) {
           this.pc += 4;
         } else {
@@ -178,7 +180,7 @@ export default class Chip8 {
         }
         break;
       case 0x5000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
+        this.debug && console.log(`${opc.toString(16)} Skips the next instruction if VX equals VY.`)
         if (this.V[(opc & 0x0F00) >>> 8] === this.V[(opc & 0x00F0) >>> 4]) {
           this.pc += 4;
         } else {
@@ -186,39 +188,39 @@ export default class Chip8 {
         }
         break;
       case 0x6000:
-        console.log(`${opc.toString(16)} Sets VX to NN.`)
+        this.debug && console.log(`${opc.toString(16)} Sets VX to NN.`)
         this.V[(opc & 0x0F00) >>> 8] = opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x7000:
-        console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
+        this.debug && console.log(`${opc.toString(16)} Adds NN to VX. (Carry flag is not changed)`)
         this.V[(opc & 0x0F00) >>> 8] += opc & 0x00FF;
         this.pc += 2;
         break;
       case 0x8000:
         switch (opc & 0x000F) {
           case 0x0000:
-            console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to the value of VY.`)
             this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0001:
-            console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to VX OR VY. (Bitwise OR operation)`)
             this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] | this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0002:
-            console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to VX AND VY. (Bitwise AND operation)`)
             this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] & this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0003:
-            console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to VX XOR VY.`)
             this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x0F00) >>> 8] ^ this.V[(opc & 0x00F0) >>> 4];
             this.pc += 2;
             break;
           case 0x0004:
-            console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`);
+            this.debug && console.log(`${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`);
             const result = this.V[(opc & 0x0F00) >>> 8] + this.V[(opc & 0x00F0) >>> 4];
             if (result > 255) {
               this.V[0xF] = 1;
@@ -230,31 +232,31 @@ export default class Chip8 {
             // TODO
             break;
           case 0x0005:
-            console.log(`${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
+            this.debug && console.log(`${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
             this.pc += 2;
             // TODO
             break;
           case 0x0006:
-            console.log(`${opc.toString(16)} Stores the least significant bit of VX in VF and then shifts VX to the right by 1.`)
+            this.debug && console.log(`${opc.toString(16)} Stores the least significant bit of VX in VF and then shifts VX to the right by 1.`)
             this.pc += 2;
             // TODO
             break;
           case 0x0007:
-            console.log(`${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`)
             this.pc += 2;
             break;
           case 0x000E:
-            console.log(`${opc.toString(16)} Stores the most significant bit of VX in VF and then shifts VX to the left by 1.`)
+            this.debug && console.log(`${opc.toString(16)} Stores the most significant bit of VX in VF and then shifts VX to the left by 1.`)
             this.pc += 2;
             break;
           default:
-            console.log(`${opc.toString(16)} Unknown opcode`);
+            this.debug && console.log(`${opc.toString(16)} Unknown opcode`);
             this.pc += 2;
             break;
         }
         break;
       case 0x9000:
-        console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
+        this.debug && console.log(`${opc.toString(16)} Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)`)
         if (this.V[(opc & 0x0F00) >>> 8] !== this.V[(opc & 0x00F0) >>> 4]) {
           this.pc += 4;
         } else {
@@ -262,16 +264,16 @@ export default class Chip8 {
         }
         break;
       case 0xA000:
-        console.log(`${opc.toString(16)} Sets I to the address NNN.`)
+        this.debug && console.log(`${opc.toString(16)} Sets I to the address NNN.`)
         this.I = opc & 0x0FFF;
         this.pc += 2;
         break;
       case 0xB000:
-        console.log(`${opc.toString(16)} Jumps to the address NNN plus V0`)
+        this.debug && console.log(`${opc.toString(16)} Jumps to the address NNN plus V0`)
         this.pc += 2;
         break;
       case 0xC000:
-        console.log(`${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`)
+        this.debug && console.log(`${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`)
         this.pc += 2;
         break;
       case 0xD000:
@@ -283,7 +285,7 @@ export default class Chip8 {
          * any screen pixels are flipped from set to unset when the sprite is 
          * drawn, and to 0 if that doesn’t happen
          */
-        console.log(`${opc.toString(16)} Draws a sprite at coordinate (VX, VY)`)
+        this.debug && console.log(`${opc.toString(16)} Draws a sprite at coordinate (VX, VY)`)
         const x = this.V[(opc & 0x0F00) >>> 8];
         const y = this.V[(opc & 0x00F0) >>> 4];
         const height = this.V[(opc & 0x000F)];
@@ -308,15 +310,15 @@ export default class Chip8 {
       case 0xE000:
         switch (opc & 0x000F) {
           case 0x000E:
-            console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block).`)
+            this.debug && console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block).`)
             this.pc += 2;
             break;
           case 0x0001:
-            console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block).`)
+            this.debug && console.log(`${opc.toString(16)} Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block).`)
             this.pc += 2;
             break;
           default:
-            console.log(`${opc.toString(16)} Unknown opcode`);
+            this.debug && console.log(`${opc.toString(16)} Unknown opcode`);
             this.pc += 2;
             break;
         }
@@ -324,31 +326,31 @@ export default class Chip8 {
       case 0xF000:
         switch (opc & 0x00FF) {
           case 0x0007:
-            console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
+            this.debug && console.log(`${opc.toString(16)} Sets VX to the value of the delay timer.`)
             this.V[(opc & 0x0F00) >>> 8] = this.delayTimer;
             this.pc += 2;
             break;
           case 0x000A:
-            console.log(`${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`)
+            this.debug && console.log(`${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`)
             this.pc += 2;
             break;
           case 0x0015:
-            console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
+            this.debug && console.log(`${opc.toString(16)} Sets the delay timer to VX.`)
             this.delayTimer = this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x0018:
-            console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
+            this.debug && console.log(`${opc.toString(16)} Sets the sound timer to VX.`)
             this.soundTimer = this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x001E:
-            console.log(`${opc.toString(16)} Adds VX to I.`)
+            this.debug && console.log(`${opc.toString(16)} Adds VX to I.`)
             this.I += this.V[(opc & 0x0F00) >>> 8];
             this.pc += 2;
             break;
           case 0x0029:
-            console.log(`${opc.toString(16)} Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.`)
+            this.debug && console.log(`${opc.toString(16)} Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.`)
             this.pc += 2;
             break;
           case 0x0033:
@@ -361,34 +363,34 @@ export default class Chip8 {
            * tens digit at location I+1, and the ones digit at location I+2.)
            * Implementation source: http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8.shtml
            */
-            console.log(`${opc.toString(16)} Store binary-coded decimal representation of VX`)
+            this.debug && console.log(`${opc.toString(16)} Store binary-coded decimal representation of VX`)
             this.memory[this.I]     = this.V[(opc & 0x0F00) >>> 8] / 100;
             this.memory[this.I + 1] = this.V[(opc & 0x0F00) >>> 8 ] / 10;
             this.memory[this.I + 2] = this.V[(opc & 0x0F00) >>> 8 ] % 10;
             this.pc += 2;
             break;
           case 0x0055:
-            console.log(`${opc.toString(16)} Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
+            this.debug && console.log(`${opc.toString(16)} Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
             for (let i = 0; i < (opc & 0x0F00) >>> 8; i++) {
               this.memory[this.I + i] = this.V[i];
             }
             this.pc += 2;
             break;
           case 0x0065:
-            console.log(`${opc.toString(16)} Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
+            this.debug && console.log(`${opc.toString(16)} Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.`)
             for (let i = 0; i < (opc & 0x0F00) >>> 8; i++) {
               this.V[i] = this.memory[this.I + i];
             }
             this.pc += 2;
             break;
           default:
-            console.log(`${opc.toString(16)} Unknown opcode`);
+            this.debug && console.log(`${opc.toString(16)} Unknown opcode`);
             this.pc += 2;
             break;
         }
         break;
       default:
-        console.log(`${opc.toString(16)} Unknow opcode`);
+        this.debug && console.log(`${opc.toString(16)} Unknow opcode`);
         this.pc += 2;
         break;
     }

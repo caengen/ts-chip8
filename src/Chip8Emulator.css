@@ -1,0 +1,11 @@
+.emulator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.emulator-canvas {
+  border: 1px solid #222;
+  margin: 1em 0;
+}
