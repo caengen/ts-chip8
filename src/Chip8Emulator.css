@@ -1,4 +1,5 @@
 .emulator {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,4 +9,19 @@
 .emulator-canvas {
   border: 1px solid #222;
   margin: 1em 0;
+}
+
+.history-list {
+  list-style-type: none;
+  border: 1px solid #222;
+  height: 8rem;
+  width: 32rem;
+  overflow-y: scroll;
+  padding: 1em;
+  text-align: left;
+}
+
+.history-list li {
+  margin: .25em 0;
+  border-bottom: 1px solid #222;
 }
