@@ -2,6 +2,7 @@ import React, { Ref } from 'react';
 import PropTypes from "prop-types";
 import Chip8 from './Chip8';
 import "./Chip8Emulator.css";
+import History from './History';
 
 export interface IChip8EmulatorProps {
   chip8File: string;
@@ -35,7 +36,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
       updateGfx: this.updateGfx,
       updateLastInstruction: this.updateLastInstruction
     });
-    this.chip8.debug = true;
+    this.chip8.debug = false;
     this.chip8.loadGame(props.chip8File);
     this.state = {
       updateTimestamp: Date.now(),
@@ -62,7 +63,6 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
 
     const now = Date.now();
 
-    console.log(`(${now - this.state.updateTimestamp}) > (${1000 / Chip8Emulator.MaxFps})`)
     if ((now - this.state.updateTimestamp) > (1000 / Chip8Emulator.MaxFps)) {
       let fpsCount = this.state.fpsCount + 1;
       let fps = this.state.fps;
@@ -116,22 +116,10 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
           <button onClick={this.pauseEmulation}>{this.state.paused ? "Resume emulation" : "Pause emulation"}</button>
         </div>
         <canvas className="emulator-canvas" ref={canvas => this.canvasRef = canvas} width={64} height={32} />
-        Last executed instruction: <code>{this.state.lastInstruction}</code>
-        <section>
-          <h1>
-            History:
-          </h1>
-          <details>
-            <ul className="history-list">
-              {this.state.instructionHistory.map((ins, index) => (
-                <li key={index}>
-                  <code>{ins}</code>
-                </li>
-              ))}
-            </ul>
-          </details>
-        </section>
-        
+        {this.chip8.debug && <>
+          Last executed instruction: <code>{this.state.lastInstruction}</code>
+          <History history={this.state.instructionHistory} />
+        </>}
       </div>
     );
   }

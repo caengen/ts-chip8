@@ -9,6 +9,7 @@
 .emulator-canvas {
   border: 1px solid #222;
   margin: 1em 0;
+  height: 8em;
 }
 
 .history-list {
