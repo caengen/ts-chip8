@@ -227,7 +227,6 @@ export default class Chip8 {
             }
             this.V[(opc & 0x0F00) >>> 8] = result % 0xFF;
             this.pc += 2;
-            // TODO
             break;
           case 0x0005:
             executedInstruction = `${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`;
@@ -328,10 +327,12 @@ export default class Chip8 {
         switch (opc & 0x000F) {
           case 0x000E:
             executedInstruction = `${opc.toString(16)} Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block).`;
+            // TODO instruction
             this.pc += 2;
             break;
           case 0x0001:
             executedInstruction = `${opc.toString(16)} Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block).`;
+            // TODO instruction
             this.pc += 2;
             break;
           default:
@@ -349,6 +350,7 @@ export default class Chip8 {
             break;
           case 0x000A:
             executedInstruction = `${opc.toString(16)} A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)`;
+            // TODO instruction
             this.pc += 2;
             break;
           case 0x0015:
@@ -363,7 +365,7 @@ export default class Chip8 {
             break;
           case 0x001E:
             executedInstruction = `${opc.toString(16)} Adds VX to I.`;
-            this.I += this.V[(opc & 0x0F00) >>> 8];
+            this.I = (this.I + this.V[(opc & 0x0F00) >>> 8]) % 0xFFFF;
             this.pc += 2;
             break;
           case 0x0029:
