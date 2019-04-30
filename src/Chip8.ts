@@ -231,14 +231,12 @@ export default class Chip8 {
             break;
           case 0x0005:
             executedInstruction = `${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`;
-            const x = (opc & 0x0F00) >>> 8;
-            const y = (opc & 0x00F0) >>> 4;
-            if (this.V[x] > this.V[y]) {
+            if (this.V[(opc & 0x0F00) >>> 8] > this.V[(opc & 0x00F0) >>> 4]) {
               this.V[0xF] = 1;
-              this.V[x] -= this.V[y];
+              this.V[(opc & 0x0F00) >>> 8] -= this.V[(opc & 0x00F0) >>> 4];
             } else { // subtraction should wrap around byte
               this.V[0xF] = 0;
-              this.V[x] = 0xFF + this.V[x] - this.V[y];
+              this.V[(opc & 0x0F00) >>> 8] = 0xFF + this.V[(opc & 0x0F00) >>> 8] - this.V[(opc & 0x00F0) >>> 4];
             }
 
             this.pc += 2;
@@ -252,6 +250,13 @@ export default class Chip8 {
             break;
           case 0x0007:
             executedInstruction = `${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`;
+            if (this.V[(opc & 0x0F00) >>> 8] < this.V[(opc & 0x00F0) >>> 4]) {
+              this.V[0xF] = 0;
+              this.V[(opc & 0x0F00) >>> 8] = this.V[(opc & 0x00F0) >>> 4] - this.V[(opc & 0x0F00) >>> 8];
+            } else {
+              this.V[0xF] = 1;
+              this.V[(opc & 0x0F00) >>> 8] = 0xFF + this.V[(opc & 0x00F0) >>> 4] - this.V[(opc & 0x0F00) >>> 8];
+            }
             this.pc += 2;
             break;
           case 0x000E:
