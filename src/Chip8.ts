@@ -220,17 +220,27 @@ export default class Chip8 {
           case 0x0004:
             executedInstruction = `${opc.toString(16)} Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.`;
             const result = this.V[(opc & 0x0F00) >>> 8] + this.V[(opc & 0x00F0) >>> 4];
-            if (result > 255) {
+            if (result > 0xFF) {
               this.V[0xF] = 1;
             } else {
               this.V[0xF] = 0;
             }
-            this.V[(opc & 0x0F00) >>> 8] = result % 255;
+            this.V[(opc & 0x0F00) >>> 8] = result % 0xFF;
             this.pc += 2;
             // TODO
             break;
           case 0x0005:
             executedInstruction = `${opc.toString(16)} VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`;
+            const x = (opc & 0x0F00) >>> 8;
+            const y = (opc & 0x00F0) >>> 4;
+            if (this.V[x] > this.V[y]) {
+              this.V[0xF] = 1;
+              this.V[x] -= this.V[y];
+            } else { // subtraction should wrap around byte
+              this.V[0xF] = 0;
+              this.V[x] = 0xFF + this.V[x] - this.V[y];
+            }
+
             this.pc += 2;
             // TODO
             break;
