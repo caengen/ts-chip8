@@ -261,6 +261,8 @@ export default class Chip8 {
             break;
           case 0x000E:
             executedInstruction = `${opc.toString(16)} Stores the most significant bit of VX in VF and then shifts VX to the left by 1.`;
+            this.V[0xF] = this.V[(opc & 0x0F00) >>> 8] >>> 7;
+            this.V[(opc & 0x0F00) >>> 8] <<= 1;
             this.pc += 2;
             break;
           default:
