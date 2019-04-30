@@ -286,7 +286,7 @@ export default class Chip8 {
         break;
       case 0xB000:
         executedInstruction = `${opc.toString(16)} Jumps to the address NNN plus V0`;
-        this.pc += 2;
+        this.pc = (opc & 0x0FFF) + this.V[0];
         break;
       case 0xC000:
         executedInstruction = `${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`;
