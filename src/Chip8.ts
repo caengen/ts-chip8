@@ -290,6 +290,7 @@ export default class Chip8 {
         break;
       case 0xC000:
         executedInstruction = `${opc.toString(16)} Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.`;
+        this.V[(opc & 0x0F00)] = Math.floor(Math.random() * 0xFF) & (opc & 0x00FF);
         this.pc += 2;
         break;
       case 0xD000:
