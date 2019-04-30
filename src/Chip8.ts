@@ -246,8 +246,9 @@ export default class Chip8 {
             break;
           case 0x0006:
             executedInstruction = `${opc.toString(16)} Stores the least significant bit of VX in VF and then shifts VX to the right by 1.`;
+            this.V[0xF] = this.V[(opc & 0x0F00)] & 0b00000001;
+            this.V[(opc & 0x0F00)] >>>= 1;
             this.pc += 2;
-            // TODO
             break;
           case 0x0007:
             executedInstruction = `${opc.toString(16)} Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.`;
