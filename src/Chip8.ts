@@ -3,6 +3,7 @@ export default class Chip8 {
   public opcode: number;
   // 4K memory
   public memory: Uint8Array;
+  private rom: Uint8Array;
   // registers V0...VE
   public V: Uint8Array;
   // index register
@@ -45,6 +46,7 @@ export default class Chip8 {
     this.sp = 0;
 
     this.memory = new Uint8Array(4096);  
+    this.rom = new Uint8Array(4096 - 0x200);  
     this.gfx = new Uint8Array(64 * 32);
     this.V = new Uint8Array(16);
     this.stack = new Uint16Array(16);
@@ -63,18 +65,29 @@ export default class Chip8 {
   /**
    * Copies program into memory
    */
-  public loadGame(file: string) {
-    const buf = new Buffer(file);
-    
-    for (let i = 0; i < buf.byteLength; i++) {  
-      this.memory[i + 512] = buf[i];
+  public loadGame(file: number[]) {
+    for (let i = 0; i < file.length; i++) {  
+      this.rom[i] = this.memory[i + 512] = file[i];
     }
+    this.romdump();
   }
 
   public dissassemble() {
     for (let i = 512; i < this.memory.length; i += 2) {
       let opcode = this.memory[i] << 8 | this.memory[i + 1];
       this.execute(opcode);
+    }
+  }
+
+  public romdump() {
+    let arr = [];
+    for (let i = 0; i < this.rom.length; i += 2) {
+      let opcode = this.rom[i] << 8 | this.rom[i + 1];
+      arr.push(opcode);
+      if (arr.length === 8) {
+        console.log(`${arr[0].toString(16)} ${arr[1].toString(16)} ${arr[2].toString(16)} ${arr[3].toString(16)} ${arr[4].toString(16)} ${arr[5].toString(16)} ${arr[6].toString(16)} ${arr[7].toString(16)}`);
+        arr = [];
+      }
     }
   }
 

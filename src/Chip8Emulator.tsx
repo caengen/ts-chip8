@@ -5,7 +5,7 @@ import "./Chip8Emulator.css";
 import History from './History';
 
 export interface IChip8EmulatorProps {
-  chip8File: string;
+  chip8File: number[];
 }
 
 export interface IChip8EmulatorState {
