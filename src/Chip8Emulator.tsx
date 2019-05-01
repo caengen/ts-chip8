@@ -36,7 +36,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
       updateGfx: this.updateGfx,
       updateLastInstruction: this.updateLastInstruction
     });
-    this.chip8.debug = false;
+    this.chip8.debug = true;
     this.chip8.loadGame(props.chip8File);
     this.state = {
       updateTimestamp: Date.now(),

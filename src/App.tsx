@@ -1,6 +1,5 @@
 import React from 'react';
 import { Loop } from "react-game-kit";
-import logo from "./logo.svg";
 import './App.css';
 import pong from "./roms/Pong.ch8";
 import Chip8Emulator from './Chip8Emulator';

@@ -1,5 +1,4 @@
 import font from "./Chip8Font";
-
 export default class Chip8 {
   public opcode: number;
   // 4K memory
@@ -67,8 +66,8 @@ export default class Chip8 {
   public loadGame(file: string) {
     const buf = new Buffer(file);
     
-    for (let i = 0; i < buf.byteLength; i++) {
-      this.memory[i + 512] = buf.readUIntBE(i, 1);
+    for (let i = 0; i < buf.byteLength; i++) {  
+      this.memory[i + 512] = buf[i];
     }
   }
 
@@ -87,6 +86,7 @@ export default class Chip8 {
 
     if (this.drawFlag) {
       this.updateGfx(this.gfx);
+      this.drawFlag = false;
     }
   }
 
@@ -96,9 +96,7 @@ export default class Chip8 {
 
   private loadFont() {
     for (let i = 0; i < font.length; i++) {
-      for (let j = 0; j < font[i].length; j++) {
-        this.memory[i + j] = font[i][j];
-      }
+      this.memory[i] = font[i];
     }
   }
 
