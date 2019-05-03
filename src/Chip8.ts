@@ -98,8 +98,9 @@ export default class Chip8 {
     this.updateTimers();
 
     if (this.drawFlag) {
+      console.log(`Updating gfx`)
       this.updateGfx(this.gfx);
-      this.drawFlag = false;
+      //this.drawFlag = false;
     }
   }
 

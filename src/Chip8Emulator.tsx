@@ -36,7 +36,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
       updateGfx: this.updateGfx,
       updateLastInstruction: this.updateLastInstruction
     });
-    this.chip8.debug = true;
+    this.chip8.debug = false;
     this.chip8.loadGame(props.chip8File);
     this.state = {
       updateTimestamp: Date.now(),
@@ -94,8 +94,9 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
   }
   pauseEmulation = () => this.setState({ paused: !this.state.paused })
 
-  componentDidUpdate() {    
-    if (this.chip8.drawFlag && this.state.gfx) {
+  componentDidUpdate() {
+    console.log("Component did update!")
+    if (this.chip8.drawFlag && this.state.gfx && this.state.gfx.length) {
       const ctx = this.canvasRef.getContext('2d');
       for (let x = 0; x < 64; x++) {
         for (let y = 0; y < 32; y++) {
@@ -105,6 +106,7 @@ export default class Chip8Emulator extends React.Component<IChip8EmulatorProps, 
           }
         }
       }
+      this.chip8.drawFlag = false;
     }
   }
 
